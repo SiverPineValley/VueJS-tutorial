@@ -6,14 +6,14 @@
             <v-flex xs12>
                 <v-alert
                 class="mb-3"
-                :value="isError"
+                :value="isLoginError"
                 type="error"
                 >
                 아이디와 비밀번호를 확인해주세요.
                 </v-alert>
                 <v-alert
                 class="mb-3"
-                :value="isSuccess"
+                :value="isLogin"
                 type="success"
                 >
                 로그인이 되었습니다.
@@ -47,7 +47,10 @@
                         block
                         large
                         depressed
-                        @click="login()"
+                        @click="login({
+                            email: email,
+                            password: password
+                        })"
                         >Log in</v-btn>
                     </div>
                 </v-card>
@@ -57,34 +60,20 @@
 </template>
 
 <script>
+// mapState는 store의 변수, mapActions는 store의 메소드를 가져옴.
+import { mapState, mapActions } from 'vuex'
 export default {
     data() {
         return {
             email: null,
-            password: null,
-            allUsers: [
-                {id: 1, name: 'Jongin Park', email: 'whddls9632@ajou.ac.kr', password: 'jongin1234' },
-                {id: 2, name: 'Juho Woo', email: 'einjuho7@ajou.ac.kr', password: 'juho1234' }
-            ],
-            isError: false,
-            isSuccess: false,
-            Errormessage: null
+            password: null
         }
     },
+    computed: {
+        ...mapState([ "isLogin", "isLoginError"])
+    },
     methods: {
-        login() {
-            // 전체 유저에서 해당 이메일로 유저를 찾는다.
-            let selectedUser = null;
-            this.allUsers.forEach(user => {
-                if(user.email === this.email) selectedUser = user;
-            });
-            // 그 유저의 비밀번호와 입력된 비밀번호를 비교한다.
-            selectedUser === null
-                ? (this.isError = true)
-                : selectedUser.password !== this.password
-                    ? (this.isError = true, this.isSuccess = false)
-                    : (this.isSuccess = true, this.isError = false);
-        }
+        ...mapActions(['login'])
     },
 }
 </script>
