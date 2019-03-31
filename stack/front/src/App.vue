@@ -14,12 +14,20 @@
             <v-list-tile-title>Home</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile router :to="{name: 'login'}">
+        <v-list-tile v-if="isLogin === false" router :to="{name: 'login'}">
           <v-list-tile-action>
-            <v-icon>contact_mail</v-icon>
+            <v-icon>account_box</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>Login</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile v-if="isLogin === true" router :to="{name: 'mypage'}">
+          <v-list-tile-action>
+            <v-icon>perm_identity</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>MyPage</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -29,7 +37,7 @@
       <v-toolbar-title>Application</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items class="hidden-sm-and-down">
-          <v-btn flat v-if="isLogin">Welcome! {{this.allUsers[current].name}}!</v-btn>
+          <v-btn flat v-if="isLogin">Welcome! {{this.current.name}}!</v-btn>
           <v-btn flat v-else router :to="{name: 'login'}">Sign in</v-btn>
         </v-toolbar-items>
     </v-toolbar>
@@ -49,7 +57,7 @@ import { mapState } from 'vuex'
       drawer: null
     }),
     computed: {
-      ...mapState(["isLogin", "allUsers", "current"])
+      ...mapState(["isLogin", "current"])
     },
     props: {
       source: String
