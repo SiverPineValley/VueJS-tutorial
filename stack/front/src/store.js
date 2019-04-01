@@ -27,6 +27,11 @@ export default new Vuex.Store({
             state.isLogin = false;
             state.isLoginError = true;
             state.current = null;
+        },
+        logout(state) {
+            state.isLogin = false;
+            state.isLoginError = false;
+            state.current = null;
         }
     },
     // vue.js 로직
@@ -42,11 +47,15 @@ export default new Vuex.Store({
             });
             // 그 유저의 비밀번호와 입력된 비밀번호를 비교한다.
             if (selectedUser === null || selectedUser.password !== loginObj.password)
-                commit('loginError')
+                commit('loginError');
             else {
                 commit('loginSuccess', selectedUser);
                 router.push({ name: "mypage" });
             }
+        },
+        logout({ commit }) {
+            commit('logout');
+            router.push({ name: "home" });
         }
     }
 });
