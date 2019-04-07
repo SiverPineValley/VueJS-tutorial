@@ -52,6 +52,8 @@
                             password: password
                         })"
                         >Log in</v-btn>
+                        <!-- <v-btn @click="test">Test</v-btn>
+                        <v-btn @click="postTest">Post Test</v-btn> -->
                     </div>
                 </v-card>
             </v-flex>
@@ -62,6 +64,7 @@
 <script>
 // mapState는 store의 변수, mapActions는 store의 메소드를 가져옴.
 import { mapState, mapActions } from 'vuex'
+
 export default {
     data() {
         return {
@@ -73,7 +76,27 @@ export default {
         ...mapState([ "isLogin", "isLoginError"])
     },
     methods: {
-        ...mapActions(['login'])
+        ...mapActions(['login']),
+        // test() {
+
+        //     // Make a request for a user with a given ID
+        //     axios
+        //     .get('https://reqres.in/api/users?page=2')
+        //     .then(res => {
+        //         // handle success
+        //         console.log(res);
+        //     })
+        //     .catch(err => {
+        //         // handle error
+        //         console.log(err);
+        //     })
+        //     .then(() => {
+        //         // always executed
+        //     });
+        // },
+        // postTest() {
+
+        // }
     },
 }
 </script>
