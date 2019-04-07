@@ -34,7 +34,7 @@ export default new Vuex.Store({
     // vue.js 로직
     actions: {
         // 로그인 시도
-        login({ commit }, loginObj) {
+        login({ commit, dispatch }, loginObj) {
             // // 전체 유저에서 해당 이메일로 유저를 찾는다.
             // let selectedUser = null;
             // state.allUsers.forEach(user => {
@@ -57,27 +57,10 @@ export default new Vuex.Store({
                     // 토큰을 헤더에 포함시켜서 유저 정보를 요청
                     // get은 두번째 파라미터로 config
                     let token = res.data.token;
-                    let config = {
-                        headers: {
-                            "access-token": token
-                        }
-                    };
-                    // 토큰 -> 멤버 정보 반환
+                    // 토큰을 로컬 스토리지에 저장
+                    localStorage.setItem("access-token", token);
+                    dispatch("getMemberInfo");
                     // 새로 고침 -> 토큰만 가지고 멤버 정보 교환
-                    axios.get('https://reqres.in/api/users/2', config)
-                        .then(response => {
-                            let current = {
-                                id: response.data.data.id,
-                                first_name: response.data.data.first_name,
-                                last_name: response.data.data.last_name,
-                                avatar: response.data.data.avatar
-                            }
-                            commit('loginSuccess', current);
-                            router.push({ name: "mypage" });
-                        })
-                        .catch(() => {
-                            commit('loginError');
-                        })
                 })
                 .catch(() => {
                     commit('loginError');
@@ -85,7 +68,32 @@ export default new Vuex.Store({
         },
         logout({ commit }) {
             commit('logout');
+            localStorage.removeItem('access-token');
             router.push({ name: "home" });
+        },
+        getMemberInfo({ commit }) {
+            // 로컬 스토리지에 저장된 토큰을 불러온다.
+            // 토큰 -> 멤버 정보 반환
+            let token = localStorage.getItem('access-token');
+            let config = {
+                headers: {
+                    "access-token": token
+                }
+            };
+            axios.get('https://reqres.in/api/users/2', config)
+                .then(response => {
+                    let current = {
+                        id: response.data.data.id,
+                        first_name: response.data.data.first_name,
+                        last_name: response.data.data.last_name,
+                        avatar: response.data.data.avatar
+                    }
+                    commit('loginSuccess', current);
+                    router.push({ name: "mypage" });
+                })
+                .catch(() => {
+                    commit('loginError');
+                })
         }
     }
 });
