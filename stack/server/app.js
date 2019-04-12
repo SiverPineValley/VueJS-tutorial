@@ -37,9 +37,10 @@ app.use(function(req, res, next) {
     next(createError(404));
 });
 
-// error handler
+// error handling middleware
 app.use(function(err, req, res, next) {
     // set locals, only providing error in development
+    // res.status(422).send({error: err.messsage});
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
 
