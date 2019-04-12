@@ -7,7 +7,7 @@ var logger = require('morgan'); // http 리퀘스트에 대해 로깅하는 모�
 const mongoose = require('mongoose');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var usersRouter = require('./routes/user');
 
 // 익스프레스 객체를 생성하고 환경 설정을 한다.
 
@@ -19,7 +19,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 // connect to modules
-mongoose.connect('mongodb://localhost/gaon_geek');
+mongoose.connect('mongodb://localhost/wearever');
 mongoose.Promise = global.Promise;
 app.use(bodyParser.json());
 app.use(logger('dev'));
@@ -30,7 +30,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // 라우팅 설정. 세부 라우팅 설정은 /routes 폴더에 구현된다.
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/user', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

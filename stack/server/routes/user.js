@@ -1,23 +1,23 @@
-var express = require('express');
+const express = require('express');
+const User = require('../models/schema');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-var router = express.Router();
+const router = express.Router();
 
 /* Get users listing. */
 router.get('/', function(req, res, next) {
-    res.send({ type: 'GET' });
+    User.find().then(user => {
+        res.send(user);
+    })
 });
 
 /* Add a new user to the db */
 router.post('/', function(req, res, next) {
-    console.log(req.body);
-    res.send({
-        type: 'POST',
-        name: req.body,
-        email: req.email,
-        password: req.password
-    })
+    // create가 성공적이면, then 이후를 실행
+    User.create(req.body).then(user => {
+        res.send(user);
+    });
 });
 
 /* Update a user in the db */

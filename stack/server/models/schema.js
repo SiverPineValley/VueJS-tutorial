@@ -24,6 +24,6 @@ const UserSchema = new Schema({
 });
 
 // Collection 이름 지정
-const User = mongoose.model('User', UserSchema);
+const User = mongoose.model('user', UserSchema);
 
 module.exports = User;
