@@ -5,9 +5,10 @@ const bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser'); // http로 요청한 클라이언트 쿠키 정보에 접근하기 위한 모듈이다.
 var logger = require('morgan'); // http 리퀘스트에 대해 로깅하는 모듈이다.
 const mongoose = require('mongoose');
+const config = require('./config')
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/user');
+var usersRouter = require('./routes/user/user');
 
 // 익스프레스 객체를 생성하고 환경 설정을 한다.
 
@@ -17,11 +18,16 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+// set the secret key variable for jwt
+app.set('jwt-secret', config.secret)
 
 // connect to modules
 mongoose.connect('mongodb://localhost/wearever');
 mongoose.Promise = global.Promise;
+// parse JSON and url-encoded query
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
+// print the request log on console
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
