@@ -83,8 +83,8 @@ router.post('/login', (req, res, next) => {
         if (req.body.pwd === user.pwd) {
             // create a promise that generates jwt asynchronously
             const userToken = getToken(req, user);
-            res.send({ "response": 202, token: userToken });
-        } else res.send({ "Response": 400, "error": "아이디와 비밀번호를 확인해주세요." });
+            res.status(202).send({ "Response": 202, "token": userToken });
+        } else res.status(400).send({ "Response": 400, "error": "아이디와 비밀번호를 확인해주세요." });
     }).catch(next);
 });
 
@@ -96,20 +96,22 @@ router.post('/login', (req, res, next) => {
 */
 router.post('/check', (req, res, next) => {
     const secret = req.app.get('jwt-secret');
-    // var token = req.body.accessToken;
     var token = req.get('accessToken');
-    console.log(token);
     if (typeof token !== 'undefined') {
         var decoded = jwt.verify(token, secret);
-        console.log(decoded);
-        User.findOne({ id: decoded.id }).then(function(user) {
-            req.user = user;
-            next();
+        User.findOne({ id: decoded.id }).then(user => {
+            res.send({ "Response": 202, "token": token });
         }).catch(function(err) {
-            res.status(400).send(err.message);
+            res.status(400).send({
+                "Response": 400,
+                "error": err.message
+            });
         });
     } else {
-        res.sendStatus(403);
+        res.status(403).send({
+            "Response": 403,
+            "error": "로그인 토큰이 잘못된 형식입니다."
+        });
     }
 });
 
@@ -119,9 +121,8 @@ function getToken(req, user) {
             id: user.id,
         },
         secret, {
-            expiresIn: '7d',
-            issuer: 'wearever.com',
-            subject: user.name
+            expiresIn: '1h',
+            issuer: 'wearever.com'
         })
     return token;
 }
